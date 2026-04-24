@@ -10,6 +10,8 @@ paths:
   X_testT: src/micro_ml/data/features/X_testT.parquet
   y_trainT: src/micro_ml/data/features/y_trainT.parquet
   y_testT: src/micro_ml/data/features/y_testT.parquet
+  train_predictions: src/micro_ml/data/model_output/train_predictions.parquet
+  test_predictions: src/micro_ml/data/model_output/test_predictions.parquet
   preprocessing_model: src/micro_ml/data/model/preprocessor.skops
   sklearn_model: src/micro_ml/data/model/model.skops
 

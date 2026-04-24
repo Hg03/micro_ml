@@ -1,4 +1,4 @@
-from micro_ml.scripts.train import build_model
+from micro_ml.scripts.train import build_model, make_predictions
 
 
 class Training:
@@ -9,5 +9,6 @@ class Training:
         if self.cfg.pipeline == "enable":
             print("Training Pipeline Selected...")
             build_model(cfg=self.cfg)
+            make_predictions(cfg=self.cfg)
         else:
             print("Training Pipeline Ignored...")
