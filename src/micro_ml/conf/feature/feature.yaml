@@ -1,0 +1,28 @@
+pipeline: enable # disable
+test_size: 0.3
+
+paths:
+  raw: src/micro_ml/data/raw/raw_data.parquet
+  encoded: src/micro_ml/data/intermediate/encoded_data.parquet
+  X_train: src/micro_ml/data/intermediate/X_train.parquet
+  X_test: src/micro_ml/data/intermediate/X_test.parquet
+  y_train: src/micro_ml/data/intermediate/y_train.parquet
+  y_test: src/micro_ml/data/intermediate/y_test.parquet
+  X_trainT: src/micro_ml/data/features/X_trainT.parquet
+  X_testT: src/micro_ml/data/features/X_testT.parquet
+  y_trainT: src/micro_ml/data/features/y_trainT.parquet
+  y_testT: src/micro_ml/data/features/y_testT.parquet
+  preprocessing_model: src/micro_ml/data/model/preprocessor.skops
+
+columns:
+  features: ['age', 'experience_years', 'daily_work_hours', 'sleep_hours', 'caffeine_intake', 'bugs_per_day', 'commits_per_day', 'meetings_per_day', 'screen_time', 'exercise_hours', 'stress_level']
+  target: 'burnout_level'
+  target_encodings:
+    High: 2
+    Medium: 1
+    Low: 0
+
+strategy:
+  impute: most_frequent
+
+

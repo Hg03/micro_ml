@@ -1,0 +1,4 @@
+defaults:
+  - feature: feature
+  - training: training
+  - inference: inference

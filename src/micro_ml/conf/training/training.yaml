@@ -1,0 +1,19 @@
+pipeline: enable # disable
+model: HistGradientBoostingClassifier
+
+paths:
+  X_train: src/micro_ml/data/intermediate/X_train.parquet
+  X_test: src/micro_ml/data/intermediate/X_test.parquet
+  y_train: src/micro_ml/data/intermediate/y_train.parquet
+  y_test: src/micro_ml/data/intermediate/y_test.parquet
+  X_trainT: src/micro_ml/data/features/X_trainT.parquet
+  X_testT: src/micro_ml/data/features/X_testT.parquet
+  y_trainT: src/micro_ml/data/features/y_trainT.parquet
+  y_testT: src/micro_ml/data/features/y_testT.parquet
+  preprocessing_model: src/micro_ml/data/model/preprocessor.skops
+  sklearn_model: src/micro_ml/data/model/model.skops
+
+columns:
+  target: 'burnout_level'
+
+HistGradientBoostingClassifier: null
