@@ -1,0 +1,51 @@
+services:
+
+  training:
+    build:
+      context: .
+      dockerfile: Dockerfile.training
+    container_name: micro_ml_training
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount full data directory — model, features, intermediate, outputs all persist on host
+      - ./src/micro_ml/data:/app/src/micro_ml/data
+    environment:
+      - ENV=development
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - micro_ml_net
+
+  inference:
+    build:
+      context: .
+      dockerfile: Dockerfile.inference
+    container_name: micro_ml_inference
+    ports:
+      - "8001:8001"
+    volumes:
+      # Reads model from the same host data directory (read-only)
+      - ./src/micro_ml/data:/app/src/micro_ml/data:ro
+    environment:
+      - ENV=development
+    depends_on:
+      training:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - micro_ml_net
+
+
+networks:
+  micro_ml_net:
+    driver: bridge
