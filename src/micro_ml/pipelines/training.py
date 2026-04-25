@@ -1,4 +1,5 @@
 from micro_ml.scripts.train import build_model, make_predictions
+from micro_ml.scripts.evaluate import get_metrics
 
 
 class Training:
@@ -10,5 +11,6 @@ class Training:
             print("Training Pipeline Selected...")
             build_model(cfg=self.cfg)
             make_predictions(cfg=self.cfg)
+            get_metrics(cfg=self.cfg)
         else:
             print("Training Pipeline Ignored...")

@@ -9,7 +9,6 @@ from pydantic import BaseModel
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
 MODEL_DIR = Path(__file__).parents[2] / "micro_ml" / "data" / "model"
-print(MODEL_DIR)
 MODEL_PATH = MODEL_DIR / "model.skops"
 PREPROCESSOR_PATH = MODEL_DIR / "preprocessor.skops"
 
