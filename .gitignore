@@ -7,7 +7,7 @@ wheels/
 *.egg-info
 
 
-src/micro_ml/data/feature/*.parquet
+src/micro_ml/data/features/*.parquet
 src/micro_ml/data/intermediate/*.parquet
 src/micro_ml/data/model/*.parquet
 src/micro_ml/data/model_output/*.parquet
