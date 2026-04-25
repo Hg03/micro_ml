@@ -6,8 +6,9 @@ WORKDIR /app
 # Install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
-# Copy dependency files first (better layer caching)
-COPY pyproject.toml uv.lock ./
+# Copy all files needed to build the package
+COPY pyproject.toml uv.lock README.md ./
+COPY src/ ./src/
 
 # Install dependencies into a virtual environment
 RUN uv sync --frozen --no-dev
@@ -30,6 +31,4 @@ ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-EXPOSE 8000
-
-CMD ["uvicorn", "micro_ml.entrypoints.training_endpoint:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "-m", "micro_ml.entrypoints.training_endpoint"]
