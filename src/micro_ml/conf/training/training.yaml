@@ -19,3 +19,9 @@ columns:
   target: 'burnout_level'
 
 HistGradientBoostingClassifier: null
+
+huggingface:
+  repo_id: harish03/micro_ml
+  repo_type: model
+  model_name: model.skops
+  preprocessor_name: preprocessor.skops

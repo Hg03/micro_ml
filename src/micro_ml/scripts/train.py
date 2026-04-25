@@ -1,7 +1,12 @@
 from sklearn.ensemble import HistGradientBoostingClassifier
 from micro_ml.scripts.utils import load_assets, save_assets
+from huggingface_hub import HfApi
 from omegaconf import DictConfig
+from dotenv import load_dotenv
 import polars as pl
+import os
+
+load_dotenv()
 
 
 def build_model(cfg: DictConfig) -> None:
@@ -32,3 +37,20 @@ def make_predictions(cfg: DictConfig) -> None:
             ),
         }
     )
+
+
+def upload_to_huggingface(cfg: DictConfig):
+    api = HfApi(token=os.getenv("HF_TOKEN"))
+    api.upload_file(
+        repo_id=cfg.huggingface.repo_id,
+        repo_type=cfg.huggingface.repo_type,
+        path_or_fileobj=cfg.paths.sklearn_model,
+        path_in_repo=cfg.huggingface.model_name,
+    )
+    api.upload_file(
+        repo_id=cfg.huggingface.repo_id,
+        repo_type=cfg.huggingface.repo_type,
+        path_or_fileobj=cfg.paths.preprocessing_model,
+        path_in_repo=cfg.huggingface.preprocessor_name,
+    )
+    print(f"Artifacts uploaded to {cfg.huggingface.repo_id}")

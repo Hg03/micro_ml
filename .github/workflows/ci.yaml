@@ -27,4 +27,6 @@ jobs:
 
       - name: Run training script
         # We use 'uv run' to ensure the script uses the environment created by 'uv sync'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: uv run train

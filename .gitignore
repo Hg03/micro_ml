@@ -15,3 +15,4 @@ src/micro_ml/data/*/*.skops
 outputs/
 # Virtual environments
 .venv
+.env

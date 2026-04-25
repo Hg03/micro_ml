@@ -1,16 +1,22 @@
+from huggingface_hub import hf_hub_download
 from contextlib import asynccontextmanager
-from pathlib import Path
-
-import polars as pl
-import skops.io as sio
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from dotenv import load_dotenv
+from pathlib import Path
+import skops.io as sio
+import polars as pl
+import os
+
+load_dotenv()
 
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
 MODEL_DIR = Path(__file__).parents[2] / "micro_ml" / "data" / "model"
 MODEL_PATH = MODEL_DIR / "model.skops"
 PREPROCESSOR_PATH = MODEL_DIR / "preprocessor.skops"
+HF_REPO_ID = "harish03/micro_ml"
+
 
 # ── Target decoding (inverse of feature.yaml target_encodings) ────────────────
 TARGET_DECODE = {2: "High", 1: "Medium", 0: "Low"}
@@ -22,11 +28,27 @@ state: dict = {}
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Load model and preprocessor once at startup."""
+    """Download artifacts from Hugging Face if not present, then load."""
+
+    MODEL_DIR.mkdir(parents=True, exist_ok=True)
+
     if not MODEL_PATH.exists():
-        raise RuntimeError(f"Model not found at {MODEL_PATH}")
+        print("model.skops not found locally, downloading from Hugging Face...")
+        hf_hub_download(
+            token=os.getenv("HF_TOKEN"),
+            repo_id=HF_REPO_ID,
+            filename="model.skops",
+            local_dir=MODEL_DIR,
+        )
+
     if not PREPROCESSOR_PATH.exists():
-        raise RuntimeError(f"Preprocessor not found at {PREPROCESSOR_PATH}")
+        print("preprocessor.skops not found locally, downloading from Hugging Face...")
+        hf_hub_download(
+            token=os.getenv("HF_TOKEN"),
+            repo_id=HF_REPO_ID,
+            filename="preprocessor.skops",
+            local_dir=MODEL_DIR,
+        )
 
     state["model"] = sio.load(
         MODEL_PATH, trusted=sio.get_untrusted_types(file=MODEL_PATH)
