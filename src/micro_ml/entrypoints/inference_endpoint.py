@@ -1,14 +1,10 @@
-from huggingface_hub import hf_hub_download
+from micro_ml.pipelines.inference import Inference
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
+from hydra import compose, initialize
 from pydantic import BaseModel
-from dotenv import load_dotenv
 from pathlib import Path
-import skops.io as sio
 import polars as pl
-import os
-
-load_dotenv()
 
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
@@ -28,34 +24,12 @@ state: dict = {}
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Download artifacts from Hugging Face if not present, then load."""
-
-    MODEL_DIR.mkdir(parents=True, exist_ok=True)
-
-    if not MODEL_PATH.exists():
-        print("model.skops not found locally, downloading from Hugging Face...")
-        hf_hub_download(
-            token=os.getenv("HF_TOKEN"),
-            repo_id=HF_REPO_ID,
-            filename="model.skops",
-            local_dir=MODEL_DIR,
-        )
-
-    if not PREPROCESSOR_PATH.exists():
-        print("preprocessor.skops not found locally, downloading from Hugging Face...")
-        hf_hub_download(
-            token=os.getenv("HF_TOKEN"),
-            repo_id=HF_REPO_ID,
-            filename="preprocessor.skops",
-            local_dir=MODEL_DIR,
-        )
-
-    state["model"] = sio.load(
-        MODEL_PATH, trusted=sio.get_untrusted_types(file=MODEL_PATH)
-    )
-    state["preprocessor"] = sio.load(
-        PREPROCESSOR_PATH, trusted=sio.get_untrusted_types(file=PREPROCESSOR_PATH)
-    )
+    with initialize(
+        config_path="../conf", job_name="inference"
+    ):  # adjust path to your conf dir
+        cfg = compose(config_name="config")  # adjust to your config loading
+    artifacts = Inference(cfg).fire()
+    state.update(artifacts)
     yield
     state.clear()
 

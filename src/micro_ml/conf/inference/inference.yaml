@@ -1,3 +1,8 @@
-path:
-  registered_preprocessor: null
-  registered_model: null
+huggingface:
+  repo_id: "harish03/micro_ml"
+  model_name: "model.skops"
+  preprocessor_name: "preprocessor.skops"
+paths:
+  model_dir: "src/micro_ml/data/model"
+  model_name: "model.skops"
+  preprocessor_name: "preprocessor.skops"
