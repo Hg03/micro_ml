@@ -1,6 +1,6 @@
 # 🧠 Micro ML
 
-![Micro ML Banner](banner.svg)
+![Micro ML Banner](micro_ml_project_banner.svg)
 
 > A production-grade Machine Learning Classification microservice — from raw data to a live REST API.
 
